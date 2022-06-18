@@ -1,15 +1,16 @@
 from xmlrpc.server import SimpleXMLRPCServer
 import logging
-import os
 import random
+import os
 
-server = SimpleXMLRPCServer(('localhost', 9000), logRequests=True, )
+server = SimpleXMLRPCServer(('localhost', 9000), logRequests=True)
 logging.basicConfig(level=logging.INFO)
 
 insults=[]
 
 def addInsult(insult):
     insults.append(insult)
+    return ' '
 
 server.register_function(addInsult)
 
