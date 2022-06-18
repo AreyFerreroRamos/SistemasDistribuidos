@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+message Insult {
+    string insult = 1;
+}
+
+service Functions {
+    rpc AddInsult(insult) returns (insult) {}
+    rpc GetInsults(Empty) returns (insult) {}
+    rpc Insultme(Empty) returns (insult) {} 
+}
