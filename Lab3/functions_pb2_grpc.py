@@ -17,12 +17,12 @@ class FunctionsStub(object):
         self.AddInsult = channel.unary_unary(
                 '/Functions/AddInsult',
                 request_serializer=functions__pb2.Insult.SerializeToString,
-                response_deserializer=functions__pb2.Insult.FromString,
+                response_deserializer=functions__pb2.Empty.FromString,
                 )
         self.GetInsults = channel.unary_unary(
                 '/Functions/GetInsults',
                 request_serializer=functions__pb2.Empty.SerializeToString,
-                response_deserializer=functions__pb2.Insult.FromString,
+                response_deserializer=functions__pb2.Insults.FromString,
                 )
         self.Insultme = channel.unary_unary(
                 '/Functions/Insultme',
@@ -58,12 +58,12 @@ def add_FunctionsServicer_to_server(servicer, server):
             'AddInsult': grpc.unary_unary_rpc_method_handler(
                     servicer.AddInsult,
                     request_deserializer=functions__pb2.Insult.FromString,
-                    response_serializer=functions__pb2.Insult.SerializeToString,
+                    response_serializer=functions__pb2.Empty.SerializeToString,
             ),
             'GetInsults': grpc.unary_unary_rpc_method_handler(
                     servicer.GetInsults,
                     request_deserializer=functions__pb2.Empty.FromString,
-                    response_serializer=functions__pb2.Insult.SerializeToString,
+                    response_serializer=functions__pb2.Insults.SerializeToString,
             ),
             'Insultme': grpc.unary_unary_rpc_method_handler(
                     servicer.Insultme,
@@ -93,7 +93,7 @@ class Functions(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/Functions/AddInsult',
             functions__pb2.Insult.SerializeToString,
-            functions__pb2.Insult.FromString,
+            functions__pb2.Empty.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -110,7 +110,7 @@ class Functions(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/Functions/GetInsults',
             functions__pb2.Empty.SerializeToString,
-            functions__pb2.Insult.FromString,
+            functions__pb2.Insults.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 

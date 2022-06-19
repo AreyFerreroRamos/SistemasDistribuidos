@@ -9,7 +9,7 @@ import functions
 
 class FunctionsServicer(functions_pb2_grpc.FunctionsServicer):
     def AddInsult(self, request, context):
-        response = functions__pb2.Insult
+        response = functions_pb2.Insult()
         response.insult = functions.add_insult(request.insult)
         return response
     

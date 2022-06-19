@@ -1,5 +1,10 @@
 syntax = "proto3";
 
+
+message Insults {
+    repeated string insults = 10;
+}
+
 message Insult {
     string insult = 1;
 }
@@ -7,7 +12,7 @@ message Insult {
 message Empty {}
 
 service Functions {
-    rpc AddInsult(Insult) returns (Insult) {}
-    rpc GetInsults(Empty) returns (Insult) {}
-    rpc Insultme(Empty) returns (Insult) {} 
+    rpc AddInsult(Insult) returns (Empty);
+    rpc GetInsults(Empty) returns (Insults);
+    rpc Insultme(Empty) returns (Insult);
 }
