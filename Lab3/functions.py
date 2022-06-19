@@ -1,6 +1,6 @@
 import random
 
-insults=[]
+insults=['payaso', 'impresentable', 'ignorante', 'desgraciado']
 
 def add_insult(insult):
     insults.append(insult)
@@ -10,4 +10,4 @@ def get_insults():
     return list(insults)
 
 def insultme():
-    random.choice(insults)
+    return random.choice(insults)

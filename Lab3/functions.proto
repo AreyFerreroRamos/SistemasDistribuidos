@@ -4,8 +4,10 @@ message Insult {
     string insult = 1;
 }
 
+message Empty {}
+
 service Functions {
-    rpc AddInsult(insult) returns (insult) {}
-    rpc GetInsults(Empty) returns (insult) {}
-    rpc Insultme(Empty) returns (insult) {} 
+    rpc AddInsult(Insult) returns (Insult) {}
+    rpc GetInsults(Empty) returns (Insult) {}
+    rpc Insultme(Empty) returns (Insult) {} 
 }
