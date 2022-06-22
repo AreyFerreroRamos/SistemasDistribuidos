@@ -2,7 +2,7 @@ syntax = "proto3";
 
 
 message Insults {
-    repeated string insults = 10;
+    repeated string insults = 4;
 }
 
 message Insult {

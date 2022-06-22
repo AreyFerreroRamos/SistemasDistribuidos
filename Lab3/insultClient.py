@@ -7,7 +7,8 @@ channel = grpc.insecure_channel('localhost:50051')
 
 stub = functions_pb2_grpc.FunctionsStub(channel)
 
-new_insult = functions_pb2.Insult(insult='')
+new_insult = functions_pb2.Insult(insult='Desastre')
+print(new_insult)
 
 response = stub.Insultme(new_insult)
 print(response.insult)
