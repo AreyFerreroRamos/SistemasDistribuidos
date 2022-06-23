@@ -1,18 +1,17 @@
 syntax = "proto3";
 
-
-message Insults {
-    repeated string insults = 4;
+message Insult {
+    string value = 1;
 }
 
-message Insult {
-    string insult = 1;
+message Insults {
+    repeated string value = 1;
 }
 
 message Empty {}
 
 service Functions {
-    rpc AddInsult(Insult) returns (Empty);
-    rpc GetInsults(Empty) returns (Insults);
-    rpc Insultme(Empty) returns (Insult);
+    rpc AddInsult(Insult) returns (Empty) {}
+    rpc GetInsults(Empty) returns (Insults) {}
+    rpc Insultme(Empty) returns (Insult) {}
 }

@@ -10,15 +10,17 @@ import functions
 class FunctionsServicer(functions_pb2_grpc.FunctionsServicer):
     def AddInsult(self, request, context):
         response = functions_pb2.Insult()
-        response.insult = functions.add_insult(request.insult)
+        response.value = functions.add_insult(request.value)
         return response
     
     def GetInsults(self, request, context):
-        response = functions.get_insults()
+        response = functions_pb2.Insults()
+        response.value = functions.get_insults()
         return response
 
     def Insultme(self, request, context):
-        response = functions.insultme()
+        response = functions_pb2.Insult()
+        response.value = functions.insultme()
         return response
 
 server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))

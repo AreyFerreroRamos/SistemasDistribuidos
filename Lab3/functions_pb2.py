@@ -14,26 +14,26 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0f\x66unctions.proto\"\x1a\n\x07Insults\x12\x0f\n\x07insults\x18\n \x03(\t\"\x18\n\x06Insult\x12\x0e\n\x06insult\x18\x01 \x01(\t\"\x07\n\x05\x45mpty2f\n\tFunctions\x12\x1c\n\tAddInsult\x12\x07.Insult\x1a\x06.Empty\x12\x1e\n\nGetInsults\x12\x06.Empty\x1a\x08.Insults\x12\x1b\n\x08Insultme\x12\x06.Empty\x1a\x07.Insultb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0f\x66unctions.proto\"\x17\n\x06Insult\x12\r\n\x05value\x18\x01 \x01(\t\"\x18\n\x07Insults\x12\r\n\x05value\x18\x01 \x03(\t\"\x07\n\x05\x45mpty2l\n\tFunctions\x12\x1e\n\tAddInsult\x12\x07.Insult\x1a\x06.Empty\"\x00\x12 \n\nGetInsults\x12\x06.Empty\x1a\x08.Insults\"\x00\x12\x1d\n\x08Insultme\x12\x06.Empty\x1a\x07.Insult\"\x00\x62\x06proto3')
 
 
 
-_INSULTS = DESCRIPTOR.message_types_by_name['Insults']
 _INSULT = DESCRIPTOR.message_types_by_name['Insult']
+_INSULTS = DESCRIPTOR.message_types_by_name['Insults']
 _EMPTY = DESCRIPTOR.message_types_by_name['Empty']
-Insults = _reflection.GeneratedProtocolMessageType('Insults', (_message.Message,), {
-  'DESCRIPTOR' : _INSULTS,
-  '__module__' : 'functions_pb2'
-  # @@protoc_insertion_point(class_scope:Insults)
-  })
-_sym_db.RegisterMessage(Insults)
-
 Insult = _reflection.GeneratedProtocolMessageType('Insult', (_message.Message,), {
   'DESCRIPTOR' : _INSULT,
   '__module__' : 'functions_pb2'
   # @@protoc_insertion_point(class_scope:Insult)
   })
 _sym_db.RegisterMessage(Insult)
+
+Insults = _reflection.GeneratedProtocolMessageType('Insults', (_message.Message,), {
+  'DESCRIPTOR' : _INSULTS,
+  '__module__' : 'functions_pb2'
+  # @@protoc_insertion_point(class_scope:Insults)
+  })
+_sym_db.RegisterMessage(Insults)
 
 Empty = _reflection.GeneratedProtocolMessageType('Empty', (_message.Message,), {
   'DESCRIPTOR' : _EMPTY,
@@ -46,12 +46,12 @@ _FUNCTIONS = DESCRIPTOR.services_by_name['Functions']
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
-  _INSULTS._serialized_start=19
-  _INSULTS._serialized_end=45
-  _INSULT._serialized_start=47
-  _INSULT._serialized_end=71
-  _EMPTY._serialized_start=73
-  _EMPTY._serialized_end=80
-  _FUNCTIONS._serialized_start=82
-  _FUNCTIONS._serialized_end=184
+  _INSULT._serialized_start=19
+  _INSULT._serialized_end=42
+  _INSULTS._serialized_start=44
+  _INSULTS._serialized_end=68
+  _EMPTY._serialized_start=70
+  _EMPTY._serialized_end=77
+  _FUNCTIONS._serialized_start=79
+  _FUNCTIONS._serialized_end=187
 # @@protoc_insertion_point(module_scope)
