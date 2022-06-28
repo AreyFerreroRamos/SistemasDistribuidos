@@ -14,35 +14,37 @@ logging.basicConfig(level=logging.INFO)
 
 def readCSV(name_file):
     df = pandas.read_csv(name_file)
-    return df
+    return str(df)
 
-def apply():
-    return ' '
+def columns(name_file, field):
+    df = pandas.read_csv(name_file)
+    return str(df.loc[:,field])
 
-def columns(name_file):
-    df = pandas.read_csv(name_file, usecols=['File','Status'])
-    return str(df.columns(2))
+def groupby(name_file, field):
+    df = pandas.read_csv(name_file)
+    return str(df.groupby(field))
 
-def groupby():
-    return ' '
+def head(name_file, num_rows):
+    df = pandas.read_csv(name_file)
+    return str(df.head(num_rows))
 
-def head():
-    return ' '
+def isin(name_file, field, min, max):
+    df = pandas.read_csv(name_file)
+    return str(df.isin({field: [min, max]}))
 
-def isin():
-    return ' '
+def items(name_file):
+    df = pandas.read_csv(name_file)
+    return str(df.items())
 
-def items():
-    return ' '
+def max(name_file, field):
+    df = pandas.read_csv(name_file)
+    return str(df.loc[:,field].max())
 
-def max():
-    return ' '
-
-def min():
-    return ' '
+def min(name_file, field):
+    df = pandas.read_csv(name_file)
+    return str(df.loc[:,field].min())
 
 worker.register_function(readCSV)
-worker.register_function(apply)
 worker.register_function(columns)
 worker.register_function(groupby)
 worker.register_function(head)
