@@ -14,11 +14,8 @@ def addWorker(worker):
 def listWorkers():
     return list(workers)
 
-def getWorker(port):
-    for worker in workers:
-        if port==worker.split(':')[2]:
-            return worker
-    return ' '
+def numWorkers():
+    return len(workers)
 
 def removeWorker(port):
     for worker in workers:
@@ -28,7 +25,7 @@ def removeWorker(port):
 
 master.register_function(addWorker)
 master.register_function(listWorkers)
-master.register_function(getWorker)
+master.register_function(numWorkers)
 master.register_function(removeWorker)
 
 try:
