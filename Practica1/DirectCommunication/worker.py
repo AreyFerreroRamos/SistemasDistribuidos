@@ -12,46 +12,33 @@ proxy.addWorker('http://localhost:'+sys.argv[1])
 worker = SimpleXMLRPCServer(('localhost', int(sys.argv[1])), logRequests=True)
 logging.basicConfig(level=logging.INFO)
 
-def readCSV(name_file):
-    df = pandas.read_csv(name_file)
-    return str(df)
+class DaskFunctions:
+    def readCSV(self, name_file):
+        self.df = pandas.read_csv(name_file)
+        return ' '
 
-def columns(name_file, field):
-    df = pandas.read_csv(name_file)
-    return str(df.loc[:,field])
+    def columns(self, field):
+        return str(self.df.loc[:,field])
 
-def groupby(name_file, field):
-    df = pandas.read_csv(name_file)
-    return str(df.groupby(field))
+    def groupby(self, field):
+        return str(self.df.groupby(field))
 
-def head(name_file, num_rows):
-    df = pandas.read_csv(name_file)
-    return str(df.head(num_rows))
+    def head(self, name_file, num_rows):
+        return str(self.df.head(num_rows))
 
-def isin(name_file, field, min, max):
-    df = pandas.read_csv(name_file)
-    return str(df.isin({field: [min, max]}))
+    def isin(self, field, min, max):
+        return str(self.df.isin({field: [min, max]}))
 
-def items(name_file):
-    df = pandas.read_csv(name_file)
-    return str(df.items())
+    def items(self):
+        return str(self.df.items())
 
-def max(name_file, field):
-    df = pandas.read_csv(name_file)
-    return str(df.loc[:,field].max())
+    def max(self, field):
+        return str(self.df.loc[:,field].max())
 
-def min(name_file, field):
-    df = pandas.read_csv(name_file)
-    return str(df.loc[:,field].min())
+    def min(self, field):
+        return str(self.df.loc[:,field].min())
 
-worker.register_function(readCSV)
-worker.register_function(columns)
-worker.register_function(groupby)
-worker.register_function(head)
-worker.register_function(isin)
-worker.register_function(items)
-worker.register_function(max)
-worker.register_function(min)
+worker.register_instance(DaskFunctions())
 
 try:
     print('Use control + c to exit the Worker node')

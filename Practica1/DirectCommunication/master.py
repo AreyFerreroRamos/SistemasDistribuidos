@@ -5,28 +5,26 @@ import os
 master = SimpleXMLRPCServer(('localhost', 9000), logRequests=True)
 logging.basicConfig(level=logging.INFO)
 
-workers=[]
+class WorkerFunctions:
+    workers=[]
 
-def addWorker(worker):
-    workers.append(worker)
-    return ' '
+    def addWorker(self, worker):
+        self.workers.append(worker)
+        return ' '
 
-def listWorkers():
-    return list(workers)
+    def listWorkers(self):
+        return list(self.workers)
 
-def numWorkers():
-    return len(workers)
+    def numWorkers(self):
+        return len(self.workers)
 
-def removeWorker(port):
-    for worker in workers:
-        if port==worker.split(':')[2]:
-            workers.remove(worker)
-    return ' '
+    def removeWorker(self, port):
+        for worker in self.workers:
+            if port==worker.split(':')[2]:
+                self.workers.remove(worker)
+        return ' '
 
-master.register_function(addWorker)
-master.register_function(listWorkers)
-master.register_function(numWorkers)
-master.register_function(removeWorker)
+master.register_instance(WorkerFunctions())
 
 try:
     print('Use control + c to exit the Master node')
