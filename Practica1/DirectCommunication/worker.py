@@ -15,7 +15,7 @@ logging.basicConfig(level=logging.INFO)
 class DaskFunctions:
     def readCSV(self, name_file):
         self.df = pandas.read_csv(name_file)
-        return ' '
+        return str(self.df)
 
     def columns(self, field):
         return str(self.df.loc[:,field])
@@ -23,7 +23,7 @@ class DaskFunctions:
     def groupby(self, field):
         return str(self.df.groupby(field))
 
-    def head(self, name_file, num_rows):
+    def head(self, num_rows):
         return str(self.df.head(num_rows))
 
     def isin(self, field, min, max):
