@@ -1,14 +1,16 @@
+import redis
 import xmlrpc.client
 import sys
 
-client_master = xmlrpc.client.ServerProxy('http://localhost:9000')
+redis_cli = redis.Redis(host="localhost", port=16379)
 
 maxs=[]
 mins=[]
 i=1
 
 while i<len(sys.argv):
-    client_worker = xmlrpc.client.ServerProxy(client_master.listWorkers()[(i-1)%client_master.numWorkers()])
+    name_worker = redis_cli.lpop(workers)
+    client_worker = xmlrpc.client.ServerProxy(name_worker)
     print(client_worker.readCSV(sys.argv[i])+"\n")
     print(client_worker.columns()+"\n")
     print(client_worker.head(5)+"\n")

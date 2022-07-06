@@ -1,13 +1,13 @@
-import xmlrpc.client
-import sys
-import os
-
+import redis
 from xmlrpc.server import SimpleXMLRPCServer
 import logging
 import pandas
+import sys
 
-proxy = xmlrpc.client.ServerProxy('http://localhost:9000')
-proxy.addWorker('http://localhost:'+sys.argv[1])
+redis_cli = redis.Redis(host="localhost", port=16379)
+
+name_worker='http://localhost:'+sys.argv[1]
+redis_cli.rpush(workers, name_worker)
 
 worker = SimpleXMLRPCServer(('localhost', int(sys.argv[1])), logRequests=True)
 logging.basicConfig(level=logging.INFO)
@@ -51,4 +51,3 @@ try:
     worker.serve_forever()
 except KeyboardInterrupt:
     print('Exiting Worker node')
-    proxy.removeWorker(sys.argv[1])
