@@ -5,9 +5,7 @@ import pandas
 import sys
 
 redis_cli = redis.Redis(host="localhost", port=16379)
-
-name_worker='http://localhost:'+sys.argv[1]
-redis_cli.rpush(workers, name_worker)
+redis_cli.rpush('workers', 'http://localhost:'+sys.argv[1])
 
 worker = SimpleXMLRPCServer(('localhost', int(sys.argv[1])), logRequests=True)
 logging.basicConfig(level=logging.INFO)
