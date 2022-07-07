@@ -10,7 +10,6 @@ i=1
 
 while i<len(sys.argv):
     worker = redis_cli.lpop('workers')
-    print(worker)
     client_worker = xmlrpc.client.ServerProxy(worker)
     print(client_worker.readCSV(sys.argv[i])+"\n")
     print(client_worker.columns()+"\n")

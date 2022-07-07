@@ -49,3 +49,4 @@ try:
     worker.serve_forever()
 except KeyboardInterrupt:
     print('Exiting Worker node')
+    redis_cli.lrem('workers', 0, 'http://localhost:'+sys.argv[1])
