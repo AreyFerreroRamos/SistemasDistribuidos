@@ -1,0 +1,1 @@
+# Run the command 'redis-server --port 16379' from the shell.
