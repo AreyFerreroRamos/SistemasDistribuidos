@@ -1,11 +1,6 @@
 import redis
 import pandas
 
-redis_cli = redis.Redis(host="localhost", port=16379)
-
-pubsub = redis_cli.pubsub()
-pubsub.subscribe('workers')
-
 class DaskFunctions:
     def readCSV(self, name_file):
         self.df = pandas.read_csv(name_file)
@@ -37,3 +32,14 @@ class DaskFunctions:
 
     def min(self, field):
         return str(self.df.loc[:,field].min())
+
+try:
+    print('Use control + c to exit the Worker node')
+    redis_cli = redis.Redis(host="localhost", port=16379)
+    pubsub = redis_cli.pubsub()
+    pubsub.subscribe('read_csv')
+    worker = DaskFunctions()
+    message = pubsub.get_message('read_csv')
+    print(worker.readCSV(message))
+except KeyboardInterrupt:
+    print('Exiting Worker node')

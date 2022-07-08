@@ -11,6 +11,7 @@ i=1
 while i<len(sys.argv):
     worker = redis_cli.lpop('workers')
     client_worker = xmlrpc.client.ServerProxy(worker)
+    redis_cli.rpush('workers', worker)
     print(client_worker.readCSV(sys.argv[i])+"\n")
     print(client_worker.columns()+"\n")
     print(client_worker.head(5)+"\n")
@@ -19,7 +20,6 @@ while i<len(sys.argv):
     maxs.append(float(client_worker.max('Temp_max')))
     mins.append(float(client_worker.min('Temp_min')))
     i+=1
-    redis_cli.rpush('workers', worker)
 
 print("Temperatura maxima: "+str(max(maxs)))
 print("Temperatura minima: "+str(min(mins)))
