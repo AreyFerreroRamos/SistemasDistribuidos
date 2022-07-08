@@ -1,10 +1,14 @@
 import redis
+from xmlrpc.server import SimpleXMLRPCServer
+import logging
 import pandas
+import sys
 
 redis_cli = redis.Redis(host="localhost", port=16379)
+redis_cli.rpush('workers', 'http://localhost:'+sys.argv[1])
 
-pubsub = redis_cli.pubsub()
-pubsub.subscribe('workers')
+worker = SimpleXMLRPCServer(('localhost', int(sys.argv[1])), logRequests=True)
+logging.basicConfig(level=logging.INFO)
 
 class DaskFunctions:
     def readCSV(self, name_file):
@@ -37,3 +41,12 @@ class DaskFunctions:
 
     def min(self, field):
         return str(self.df.loc[:,field].min())
+
+worker.register_instance(DaskFunctions())
+
+try:
+    print('Use control + c to exit the Worker node')
+    worker.serve_forever()
+except KeyboardInterrupt:
+    print('Exiting Worker node')
+    redis_cli.lrem('workers', 0, 'http://localhost:'+sys.argv[1])
