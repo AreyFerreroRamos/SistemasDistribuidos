@@ -10,7 +10,7 @@ message Insults {
 
 message Empty {}
 
-service Functions {
+service InsultingService {
     rpc AddInsult(Insult) returns (Empty) {}
     rpc GetInsults(Empty) returns (Insults) {}
     rpc Insultme(Empty) returns (Insult) {}

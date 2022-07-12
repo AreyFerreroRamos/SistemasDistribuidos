@@ -2,30 +2,30 @@ import grpc
 from concurrent import futures
 import time
 
-import functions_pb2
-import functions_pb2_grpc
+import insultingServer_pb2
+import insultingServer_pb2_grpc
 
-import functions
+from InsultingService import insultingService
 
-class FunctionsServicer(functions_pb2_grpc.FunctionsServicer):
+class InsultingServiceServicer(insultingServer_pb2_grpc.InsultingServiceServicer):
     def AddInsult(self, request, context):
-        response = functions_pb2.Insult()
-        response.value = functions.add_insult(request.value)
+        response = insultingServer_pb2.Insult()
+        response.value = insultingService.add_insult(request.value)
         return response
     
     def GetInsults(self, request, context):
-        response = functions_pb2.Insults()
-        response.value = functions.get_insults()
+        response = insultingServer_pb2.Insults()
+        response.value.extend(insultingService.get_insults())
         return response
 
     def Insultme(self, request, context):
-        response = functions_pb2.Insult()
-        response.value = functions.insultme()
+        response = insultingServer_pb2.Insult()
+        response.value = insultingService.insultme()
         return response
 
 server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
 
-functions_pb2_grpc.add_FunctionsServicer_to_server(FunctionsServicer(), server)
+insultingServer_pb2_grpc.add_InsultingServiceServicer_to_server(InsultingServiceServicer(), server)
 
 print('Starting server. Listening on port 50051.')
 server.add_insecure_port('[::]:50051')

@@ -1,15 +1,16 @@
 import redis
 import sys
 
-redis_cli = redis.Redis(host="localhost", port=16379, decode_responses=True, encoding="utf-8")
+redis_cli = redis.Redis(host="localhost", port=16379)
 pubsub = redis_cli.pubsub()
-pubsub.subscribe('read_csv')
+#pubsub.subscribe('read_csv')
 
 maxs=[]
 mins=[]
 i=1
 
 while i<len(sys.argv):
+    print(sys.argv[i])
     redis_cli.publish('read_csv', sys.argv[i])
     #print(client_worker.readCSV(sys.argv[i])+"\n")
     #print(client_worker.columns()+"\n")
