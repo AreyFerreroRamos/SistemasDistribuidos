@@ -1,3 +1,13 @@
 syntax = "proto3";
 
-message Field
+message NameFile {
+     string value = 1;
+}
+
+message Return {
+     string value = 1;
+}
+
+service DaskFunctions {
+    rpc ReadCSV(NameFile) returns (Return) {}
+}
