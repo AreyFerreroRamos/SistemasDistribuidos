@@ -22,5 +22,5 @@ while i<len(sys.argv):
     mins.append(float(client_worker.Min(min_attributes).value))
     i+=1
 
-print("Temperatura maxima: "+str(max(maxs)))
-print("Temperatura minima: "+str(min(mins)))
+print("Temperatura maxima: "+str(round(max(maxs), 2)))
+print("Temperatura minima: "+str(round(min(mins), 2)))
