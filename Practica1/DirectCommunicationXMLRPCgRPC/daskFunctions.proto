@@ -1,13 +1,24 @@
 syntax = "proto3";
 
 message NameFile {
+     string name_file = 1;
+}
+
+message Field {
+     string name_file = 1;
+     string field = 2;
+}
+
+message FileReturn {
      string value = 1;
 }
 
-message Return {
-     string value = 1;
+message ValueReturn {
+     float value = 1;
 }
 
 service DaskFunctions {
-    rpc ReadCSV(NameFile) returns (Return) {}
+    rpc ReadCSV(NameFile) returns (FileReturn) {}
+    rpc Max(Field) returns (ValueReturn) {}
+    rpc Min(Field) returns (ValueReturn) {}
 }

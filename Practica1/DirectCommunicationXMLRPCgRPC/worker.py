@@ -16,8 +16,18 @@ proxy.addWorker('http://localhost:'+sys.argv[1])
 
 class DaskFunctionsServicer(daskFunctions_pb2_grpc.DaskFunctionsServicer):
     def ReadCSV(self, request, context):
-        response = daskFunctions_pb2.NameFile()
-        response.value = daskFunctions.DaskFunctions().readCSV(request.value)
+        response = daskFunctions_pb2.FileReturn()
+        response.value = daskFunctions.DaskFunctions().readCSV(request.name_file)
+        return response
+
+    def Max(self, request, context):
+        response = daskFunctions_pb2.ValueReturn()
+        response.value = daskFunctions.DaskFunctions().max(request.name_file, request.field)
+        return response
+
+    def Min(self, request, context):
+        response = daskFunctions_pb2.ValueReturn()
+        response.value = daskFunctions.DaskFunctions().min(request.name_file, request.field)
         return response
 
 server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
