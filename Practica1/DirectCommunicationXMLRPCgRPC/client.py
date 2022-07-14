@@ -16,10 +16,10 @@ while i<len(sys.argv):
     client_worker = daskFunctions_pb2_grpc.DaskFunctionsStub(channel)
     name_file = daskFunctions_pb2.NameFile(name_file=sys.argv[i])
     print(client_worker.ReadCSV(name_file).value+"\n")
-    max_atributes = daskFunctions_pb2.Field(name_file=sys.argv[i], field='Temp_max')
-    maxs.append(float(client_worker.Max(max_atributes).value))
-    min_attributes = daskFunctions_pb2.Field(name_file=sys.argv[i], field='Temp_min')
-    mins.append(float(client_worker.Min(min_attributes).value))
+    field = daskFunctions_pb2.Field(field='Temp_max')
+    maxs.append(float(client_worker.Max(field).value))
+    field = daskFunctions_pb2.Field(field='Temp_min')
+    mins.append(float(client_worker.Min(field).value))
     i+=1
 
 print("Temperatura maxima: "+str(round(max(maxs), 2)))
