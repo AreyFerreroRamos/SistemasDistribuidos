@@ -2,11 +2,9 @@ import redis
 import sys
 
 redis_cli = redis.Redis(host="localhost", port=16379)
-pubsub = redis_cli.pubsub()
-#pubsub.subscribe('read_csv')
 
-maxs=[]
-mins=[]
+#maxs=[]
+#mins=[]
 i=1
 
 while i<len(sys.argv):
