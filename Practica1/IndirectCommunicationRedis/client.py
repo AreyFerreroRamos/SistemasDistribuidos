@@ -1,23 +1,21 @@
 import redis
 import sys
+import time
 
-redis_cli = redis.Redis(host="localhost", port=16379)
+redis_cli = redis.Redis(host="localhost", port=16379, decode_responses=True, encoding="utf-8")
+pubsub_read_file = redis_cli.pubsub()
 
-#maxs=[]
-#mins=[]
 i=1
-
 while i<len(sys.argv):
-    print(sys.argv[i])
-    redis_cli.publish('read_csv', sys.argv[i])
-    #print(client_worker.readCSV(sys.argv[i])+"\n")
-    #print(client_worker.columns()+"\n")
-    #print(client_worker.head(5)+"\n")
-    #print(client_worker.isin('City', 'Tarragona')+"\n")
-    #print(client_worker.item(5, 3)+"\n")
-    #maxs.append(float(client_worker.max('Temp_max')))
-    #mins.append(float(client_worker.min('Temp_min')))
+    redis_cli.publish('name_file', sys.argv[i])
+    pubsub_read_file.subscribe(sys.argv[i])
+    capturate=False
+    while not capturate:
+        message = pubsub_read_file.get_message(ignore_subscribe_messages=True)
+        if message and (message.get('type') == 'message'):
+            print(message.get('data'))
+            pubsub_read_file.unsubscribe(sys.argv[i])
+            capturate = True
+        else:
+            time.sleep(1)
     i+=1
-
-#print("Temperatura maxima: "+str(max(maxs)))
-#print("Temperatura minima: "+str(min(mins)))
