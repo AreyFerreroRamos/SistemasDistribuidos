@@ -22,6 +22,9 @@ try:
         if message and (message.get('type') == "message"):
             redis_cli.publish(message.get('data'), worker.readCSV(message.get('data')))
             redis_cli.publish(message.get('data'), worker.columns())
+            redis_cli.publish(message.get('data'), worker.head(5))
+            redis_cli.publish(message.get('data'), worker.isin('City', 'Tarragona'))
+            redis_cli.publish(message.get('data'), worker.item(5, 3))
             redis_cli.publish(message.get('data'), worker.max('Temp_max'))
             redis_cli.publish(message.get('data'), worker.min('Temp_min'))
         message_restructure = pubsub_restructure_nodes.get_message(ignore_subscribe_messages=True)

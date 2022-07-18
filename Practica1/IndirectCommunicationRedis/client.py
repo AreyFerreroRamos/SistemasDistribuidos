@@ -18,6 +18,9 @@ while i<len(sys.argv):
         if message and (message.get('type') == 'message'):
             print(message.get('data')+"\n")
             print(pubsub.get_message(ignore_subscribe_messages=True).get('data')+"\n")
+            print(pubsub.get_message(ignore_subscribe_messages=True).get('data')+"\n")
+            print(pubsub.get_message(ignore_subscribe_messages=True).get('data')+"\n")
+            print(pubsub.get_message(ignore_subscribe_messages=True).get('data')+"\n")
             maxs.append(float(pubsub.get_message(ignore_subscribe_messages=True).get('data')))
             mins.append(float(pubsub.get_message(ignore_subscribe_messages=True).get('data')))
             pubsub.unsubscribe(sys.argv[i])
