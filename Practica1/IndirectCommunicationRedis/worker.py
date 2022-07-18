@@ -3,8 +3,12 @@ import daskFunctions
 import time
 
 redis_cli = redis.Redis(host="localhost", port=16379, decode_responses=True, encoding="utf-8")
+
+num_worker = redis_cli.get('num_workers')
+redis_cli.set('num_workers', str(int(num_worker)+1))
+
 pubsub_name_file = redis_cli.pubsub()
-pubsub_name_file.subscribe('name_file')
+pubsub_name_file.subscribe('worker'+num_worker)
 
 worker = daskFunctions.DaskFunctions()
 
@@ -18,3 +22,4 @@ try:
 except KeyboardInterrupt:
     print('Exiting worker node.')
     pubsub_name_file.unsubscribe('name_file')
+    redis_cli.set('num_workers', str(int(redis_cli.get('num_workers'))-1))

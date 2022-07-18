@@ -7,7 +7,7 @@ pubsub_read_file = redis_cli.pubsub()
 
 i=1
 while i<len(sys.argv):
-    redis_cli.publish('name_file', sys.argv[i])
+    redis_cli.publish('worker'+str(i%int(redis_cli.get('num_workers'))), sys.argv[i])
     pubsub_read_file.subscribe(sys.argv[i])
     capturate=False
     while not capturate:
