@@ -22,9 +22,25 @@ try:
         if message and (message.get('type') == "message"):
             redis_cli.publish(message.get('data'), worker.readCSV(message.get('data')))
             redis_cli.publish(message.get('data'), worker.columns())
-            redis_cli.publish(message.get('data'), worker.head(5))
-            redis_cli.publish(message.get('data'), worker.isin('City', 'Tarragona'))
-            redis_cli.publish(message.get('data'), worker.item(5, 3))
+            capturate = False
+            while not capturate:
+                num_rows = pubsub_name_file.get_message(ignore_subscribe_messages=True)
+                if num_rows and (num_rows.get('type') == "message"):
+                    redis_cli.publish(message.get('data'), worker.head(int(num_rows.get('data'))))
+                    capturate = True
+                else:
+                    time.sleep(0.1)
+            capturate = False
+            while not capturate:
+                field = pubsub_name_file.get_message(ignore_subscribe_messages=True)
+                if field and (field.get('type') == "message"):
+                    element = pubsub_name_file.get_message(ignore_subscribe_messages=True)
+                    if element and (element.get('type') == "message"):
+                        redis_cli.publish(message.get('data'), worker.isin(field.get('data'), element.get('data')))
+                        capturate = True
+                else:
+                    time.sleep(0.1)
+            
             redis_cli.publish(message.get('data'), worker.max('Temp_max'))
             redis_cli.publish(message.get('data'), worker.min('Temp_min'))
         message_restructure = pubsub_restructure_nodes.get_message(ignore_subscribe_messages=True)
@@ -35,7 +51,7 @@ try:
                 num_worker=str(int(num_worker)-1)
                 pubsub_name_file.subscribe('worker'+num_worker)
                 pubsub_restructure_nodes.subscribe('restructure_nodes'+num_worker)
-        time.sleep(1)
+        time.sleep(0.1)
 except KeyboardInterrupt:
     print('Exiting worker node.')
     pubsub_name_file.unsubscribe('worker'+num_worker)

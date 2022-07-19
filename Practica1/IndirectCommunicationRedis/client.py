@@ -18,15 +18,30 @@ while i<len(sys.argv):
         if message and (message.get('type') == 'message'):
             print(message.get('data')+"\n")
             print(pubsub.get_message(ignore_subscribe_messages=True).get('data')+"\n")
-            print(pubsub.get_message(ignore_subscribe_messages=True).get('data')+"\n")
-            print(pubsub.get_message(ignore_subscribe_messages=True).get('data')+"\n")
-            print(pubsub.get_message(ignore_subscribe_messages=True).get('data')+"\n")
+            redis_cli.publish('worker'+str(i%int(redis_cli.get('num_workers'))), str(5))
+            while not capturate:
+                head = pubsub.get_message(ignore_subscribe_messages=True)
+                if head and (head.get('type') == "message"):
+                    print(head.get('data')+"\n")
+                    capturate = True
+                else:
+                    time.sleep(0.1)
+            redis_cli.publish('worker'+str(i%int(redis_cli.get('num_workers'))), 'City')
+            redis_cli.publish('worker'+str(i%int(redis_cli.get('num_workers'))), 'Tarragona')
+            capturate = False
+            while not capturate:
+                isin = pubsub.get_message(ignore_subscribe_messages=True)
+                if isin and (isin.get('type') == "message"):
+                    print(isin.get('data')+"\n")
+                    capturate = True
+                else:
+                    time.sleep(0.1)
             maxs.append(float(pubsub.get_message(ignore_subscribe_messages=True).get('data')))
             mins.append(float(pubsub.get_message(ignore_subscribe_messages=True).get('data')))
             pubsub.unsubscribe(sys.argv[i])
             capturate = True
         else:
-            time.sleep(1)
+            time.sleep(0.1)
     i+=1
 
 print("Temperatura maxima: "+str(max(maxs)))
