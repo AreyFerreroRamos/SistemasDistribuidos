@@ -40,7 +40,16 @@ try:
                         capturate = True
                 else:
                     time.sleep(0.1)
-            
+            capturate = False
+            while not capturate:
+                row = pubsub_name_file.get_message(ignore_subscribe_messages=True)
+                if row and (row.get('type') == "message"):
+                    column = pubsub_name_file.get_message(ignore_subscribe_messages=True)
+                    if column and (column.get('type') == "message"):
+                        redis_cli.publish(message.get('data'), worker.item(row.get('data'), column.get('data')))
+                        capturate = True
+                    else:
+                        time.sleep(0.1)
             redis_cli.publish(message.get('data'), worker.max('Temp_max'))
             redis_cli.publish(message.get('data'), worker.min('Temp_min'))
         message_restructure = pubsub_restructure_nodes.get_message(ignore_subscribe_messages=True)

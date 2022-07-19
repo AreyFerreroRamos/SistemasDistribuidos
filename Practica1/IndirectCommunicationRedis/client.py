@@ -36,10 +36,17 @@ while i<len(sys.argv):
                     capturate = True
                 else:
                     time.sleep(0.1)
+            capturate = False
+            while not capturate:
+                item = pubsub.get_message(ignore_subscribe_messages=True)
+                if item and (item.get('type') == "message"):
+                    print(item.get('data'))
+                    capturate = True
+                else:
+                    time.sleep(0.1)
             maxs.append(float(pubsub.get_message(ignore_subscribe_messages=True).get('data')))
             mins.append(float(pubsub.get_message(ignore_subscribe_messages=True).get('data')))
             pubsub.unsubscribe(sys.argv[i])
-            capturate = True
         else:
             time.sleep(0.1)
     i+=1
