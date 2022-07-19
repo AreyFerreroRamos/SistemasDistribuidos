@@ -17,8 +17,15 @@ while i<len(sys.argv):
         message = pubsub.get_message(ignore_subscribe_messages=True)
         if message and (message.get('type') == 'message'):
             print(message.get('data')+"\n")
-            print(pubsub.get_message(ignore_subscribe_messages=True).get('data')+"\n")
+            while not capturate:
+                columns = pubsub.get_message(ignore_subscribe_messages=True)
+                if columns and (columns.get('type') == "message"):
+                    print(columns.get('data')+"\n")
+                    capturate = True
+                else:
+                    time.sleep(0.1)
             redis_cli.publish('worker'+str(i%int(redis_cli.get('num_workers'))), str(5))
+            capturate = False
             while not capturate:
                 head = pubsub.get_message(ignore_subscribe_messages=True)
                 if head and (head.get('type') == "message"):
@@ -26,8 +33,7 @@ while i<len(sys.argv):
                     capturate = True
                 else:
                     time.sleep(0.1)
-            redis_cli.publish('worker'+str(i%int(redis_cli.get('num_workers'))), 'City')
-            redis_cli.publish('worker'+str(i%int(redis_cli.get('num_workers'))), 'Tarragona')
+            redis_cli.publish('worker'+str(i%int(redis_cli.get('num_workers'))), 'City'+':'+'Tarragona')
             capturate = False
             while not capturate:
                 isin = pubsub.get_message(ignore_subscribe_messages=True)
@@ -36,8 +42,7 @@ while i<len(sys.argv):
                     capturate = True
                 else:
                     time.sleep(0.1)
-            redis_cli.publish('worker'+str(i%int(redis_cli.get('num_workers'))), str(5))
-            redis_cli.publish('worker'+str(i%int(redis_cli.get('num_workers'))), str(3))
+            redis_cli.publish('worker'+str(i%int(redis_cli.get('num_workers'))), str(5)+':'+str(3))
             capturate = False
             while not capturate:
                 item = pubsub.get_message(ignore_subscribe_messages=True)
@@ -46,8 +51,22 @@ while i<len(sys.argv):
                     capturate = True
                 else:
                     time.sleep(0.1)
-            maxs.append(float(pubsub.get_message(ignore_subscribe_messages=True).get('data')))
-            mins.append(float(pubsub.get_message(ignore_subscribe_messages=True).get('data')))
+            capturate = False
+            while not capturate:
+                maxm = pubsub.get_message(ignore_subscribe_messages=True)
+                if maxm and (maxm.get('type') == "message"):
+                    maxs.append(float(maxm.get('data')))
+                    capturate = True
+                else:
+                    time.sleep(0.1)
+            capturate = False
+            while not capturate:
+                minm = pubsub.get_message(ignore_subscribe_messages=True)
+                if minm and (minm.get('type') == "message"):    
+                    mins.append(float(minm.get('data')))
+                    capturate = True
+                else:
+                    time.sleep(0.1)
             pubsub.unsubscribe(sys.argv[i])
         else:
             time.sleep(0.1)
