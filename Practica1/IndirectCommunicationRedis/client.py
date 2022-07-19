@@ -36,11 +36,13 @@ while i<len(sys.argv):
                     capturate = True
                 else:
                     time.sleep(0.1)
+            redis_cli.publish('worker'+str(i%int(redis_cli.get('num_workers'))), str(5))
+            redis_cli.publish('worker'+str(i%int(redis_cli.get('num_workers'))), str(3))
             capturate = False
             while not capturate:
                 item = pubsub.get_message(ignore_subscribe_messages=True)
                 if item and (item.get('type') == "message"):
-                    print(item.get('data'))
+                    print(item.get('data')+"\n")
                     capturate = True
                 else:
                     time.sleep(0.1)
