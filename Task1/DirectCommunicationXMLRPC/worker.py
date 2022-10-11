@@ -1,6 +1,5 @@
 import xmlrpc.client
 import sys
-import os
 
 from xmlrpc.server import SimpleXMLRPCServer
 import logging

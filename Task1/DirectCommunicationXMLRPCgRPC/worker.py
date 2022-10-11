@@ -1,6 +1,5 @@
 import xmlrpc.client
 import sys
-import os
 
 import grpc
 from concurrent import futures
