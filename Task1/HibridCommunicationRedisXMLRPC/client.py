@@ -13,7 +13,7 @@ def treat_file(client_worker, i, max, mins):
     print(client_worker.item(5, 3)+"\n")
     maxs.append(float(client_worker.max('Temp_max')))
     mins.append(float(client_worker.min('Temp_min')))
-
+    
 threads=[]
 maxs=[]
 mins=[]
@@ -26,9 +26,9 @@ while i<len(sys.argv):
         client_worker = xmlrpc.client.ServerProxy(worker)
         threads.append(threading.Thread(target=treat_file, name="thread%s" %i, args=(client_worker, i, maxs, mins)))
         threads[num_worker].start()
+        redis_cli.rpush('workers', worker)
         num_worker+=1
         i+=1
-        redis_cli.rpush('workers', worker)
     num_worker=0
     while num_worker<len(threads):
         threads[num_worker].join()
