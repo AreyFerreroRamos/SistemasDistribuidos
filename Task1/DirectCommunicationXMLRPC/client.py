@@ -16,8 +16,8 @@ client_master = xmlrpc.client.ServerProxy('http://localhost:9000')
 threads=[]
 maxs=[]
 mins=[]
-i=1
 
+i=1
 while i<len(sys.argv):
     num_worker=0
     while (num_worker<client_master.numWorkers() and (i<len(sys.argv))):
