@@ -21,7 +21,7 @@ mins=[]
 i=1
 while i<len(sys.argv):
     num_worker=0
-    while ((num_worker<redis_cli.llen('workers')) and (i<len(sys.argv))):
+    while num_worker<redis_cli.llen('workers') and i<len(sys.argv):
         worker = redis_cli.lpop('workers')
         client_worker = xmlrpc.client.ServerProxy(worker)
         threads.append(threading.Thread(target=treat_file, name="thread%s" %i, args=(client_worker, i, maxs, mins)))
