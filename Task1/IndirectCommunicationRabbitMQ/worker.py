@@ -18,6 +18,10 @@ class Consumer:
     def callback(self, channel, method, properties, body):
         print(" [x] Received new message %r from %r" % (body, method.routing_key))
 
+        worker = daskFunctions.DaskFunctions()
+        message = worker.readCSV(body.decode())
+        print('\n'+message+'\n')
+
     def consume(self):
         channel = self.connection.channel()
 
