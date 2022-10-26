@@ -67,7 +67,7 @@ i=1
 publisher_name = PublisherClient({'host': 'localhost', 'port': 5672})
 
 while i<len(sys.argv):
-    publisher_name.publish('worker'+'1', sys.argv[i])
+    publisher_name.publish('worker'+'1', sys.argv[i]+':'+str(5)+':'+'City'+':'+'Tarragona'+':'+str(5)+':'+str(3))
     i+=1
 
 consumer_file = ConsumerClient({'host':'localhost', 'port':5672}, 'proves', 'proves')

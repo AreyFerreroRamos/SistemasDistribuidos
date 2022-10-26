@@ -40,7 +40,7 @@ class ConsumerWorker:
         publisher_file = PublisherWorker({'host': 'localhost', 'port': 5672})       # Aquí puede haber problemas.
         worker = daskFunctions.DaskFunctions()                                      # Aquí puede haber problemas.
 
-        publisher_file.publish('proves', worker.readCSV(body.decode())+':'+worker.columns()+':'+worker.head(5)+':'+worker.isin('City', 'Tarragona')+':'+worker.item(5, 3)+':'+worker.max('Temp_max')+':'+worker.min('Temp_min'))
+        publisher_file.publish('proves', worker.readCSV(body.decode().split(':')[0])+':'+worker.columns()+':'+worker.head(int(body.decode().split(':')[1]))+':'+worker.isin(body.decode().split(':')[2], body.decode().split(':')[3])+':'+worker.item(int(body.decode().split(':')[4]), int(body.decode().split(':')[5]))+':'+worker.max('Temp_max')+':'+worker.min('Temp_min'))
 
     def consume(self):
         channel = self.connection.channel()
