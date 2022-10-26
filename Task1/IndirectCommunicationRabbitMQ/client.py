@@ -1,25 +1,7 @@
+import publisher
 import pika
 import sys
-
-class PublisherClient:
-    def __init__(self, config):
-        self.config = config
-        self.connection = self.create_connection()
-
-    def __del__(self):
-        self.connection.close()
-
-    def create_connection(self):
-        return pika.BlockingConnection(pika.ConnectionParameters(host=self.config['host'], port=self.config['port']))
-
-    def publish(self, routing_key, message):
-        channel = self.connection.channel()
-
-        channel.exchange_declare(exchange='workers', exchange_type='topic')
-
-        channel.basic_publish(exchange='workers', routing_key=routing_key, body=message)
-        print(" [x] Sent message %r to %r" % (message, routing_key))
-        
+     
 class ConsumerClient:
     def __init__(self, config, queue_name, binding_key):
         self.config = config
@@ -34,7 +16,7 @@ class ConsumerClient:
         return pika.BlockingConnection(pika.ConnectionParameters(host=self.config['host'], port=self.config['port']))
 
     def callback(self, channel, method, properties, body):
-        print(" [x] Received new message from %r" % (method.routing_key))
+        print(" [x] Received new message from %r" % (method.routing_key)+'\n')
         
         print(body.decode().split(':')[0]+'\n')
         print(body.decode().split(':')[1]+'\n')
@@ -64,7 +46,7 @@ maxs=[]
 mins=[]
 i=1
 
-publisher_name = PublisherClient({'host': 'localhost', 'port': 5672})
+publisher_name = publisher.Publisher({'host': 'localhost', 'port': 5672})
 
 while i<len(sys.argv):
     publisher_name.publish('worker'+'1', sys.argv[i]+':'+str(5)+':'+'City'+':'+'Tarragona'+':'+str(5)+':'+str(3))

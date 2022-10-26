@@ -1,25 +1,7 @@
 import daskFunctions
+import publisher
 import pika
 import sys
-
-class PublisherWorker:
-    def __init__(self, config):
-        self.config = config
-        self.connection = self.create_connection()
-
-    def __del__(self):
-        self.connection.close()
-
-    def create_connection(self):
-        return pika.BlockingConnection(pika.ConnectionParameters(host=self.config['host'], port=self.config['port']))
-
-    def publish(self, routing_key, message):
-        channel = self.connection.channel()
-
-        channel.exchange_declare(exchange='workers', exchange_type='topic')
-
-        channel.basic_publish(exchange='workers', routing_key=routing_key, body=message)
-        print(" [x] Sent message from %r" % (routing_key))
 
 class ConsumerWorker:
     def __init__(self, config, queue_name, binding_key):
@@ -37,8 +19,8 @@ class ConsumerWorker:
     def callback(self, channel, method, properties, body):
         print(" [x] Received new message %r for %r" % (body, method.routing_key))
 
-        publisher_file = PublisherWorker({'host': 'localhost', 'port': 5672})       # Aquí puede haber problemas.
-        worker = daskFunctions.DaskFunctions()                                      # Aquí puede haber problemas.
+        publisher_file = publisher.Publisher({'host': 'localhost', 'port': 5672})       # Aquí puede haber problemas.
+        worker = daskFunctions.DaskFunctions()                                          # Aquí puede haber problemas.
 
         publisher_file.publish('proves', worker.readCSV(body.decode().split(':')[0])+':'+worker.columns()+':'+worker.head(int(body.decode().split(':')[1]))+':'+worker.isin(body.decode().split(':')[2], body.decode().split(':')[3])+':'+worker.item(int(body.decode().split(':')[4]), int(body.decode().split(':')[5]))+':'+worker.max('Temp_max')+':'+worker.min('Temp_min'))
 
