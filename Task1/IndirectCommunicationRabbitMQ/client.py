@@ -35,7 +35,14 @@ class ConsumerClient:
 
     def callback(self, channel, method, properties, body):
         print(" [x] Received new message from %r" % (method.routing_key))
-        print(body.decode())
+        
+        print(body.decode().split(':')[0]+'\n')
+        print(body.decode().split(':')[1]+'\n')
+        print(body.decode().split(':')[2]+'\n')
+        print(body.decode().split(':')[3]+'\n')
+        print(body.decode().split(':')[4]+'\n')
+        maxs.append(float(body.decode().split(':')[5]))
+        mins.append(float(body.decode().split(':')[6]))
 
     def consume(self):
         channel = self.connection.channel()
@@ -53,15 +60,18 @@ class ConsumerClient:
             print(' [*] Exiting client')
             channel.stop_consuming()
 
+maxs=[]
+mins=[]
+i=1
+
 publisher_name = PublisherClient({'host': 'localhost', 'port': 5672})
 
-#maxs=[]
-#mins=[]
-
-i=1
 while i<len(sys.argv):
     publisher_name.publish('worker'+'1', sys.argv[i])
     i+=1
 
 consumer_file = ConsumerClient({'host':'localhost', 'port':5672}, 'proves', 'proves')
 consumer_file.consume()
+
+print("Temperatura maxima: "+str(max(maxs)))
+print("Temperatura minima: "+str(min(mins)))
