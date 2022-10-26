@@ -15,10 +15,10 @@ class PublisherClient:
     def publish(self, routing_key, message):
         channel = self.connection.channel()
 
-        channel.exchange_declare(exchange='proves', exchange_type='topic')
+        channel.exchange_declare(exchange='workers', exchange_type='topic')
 
-        channel.basic_publish(exchange='proves', routing_key=routing_key, body=message)
-        print(" [x] Sent message %r from %r" % (message, routing_key))
+        channel.basic_publish(exchange='workers', routing_key=routing_key, body=message)
+        print(" [x] Sent message %r to %r" % (message, routing_key))
         
 class ConsumerClient:
     def __init__(self, config, queue_name, binding_key):
@@ -40,9 +40,9 @@ class ConsumerClient:
     def consume(self):
         channel = self.connection.channel()
 
-        channel.exchange_declare(exchange='proves', exchange_type='topic')
+        channel.exchange_declare(exchange='workers', exchange_type='topic')
         channel.queue_declare(queue=self.queue_name, exclusive=True)
-        channel.queue_bind(exchange='proves', queue=self.queue_name, routing_key=self.binding_key)
+        channel.queue_bind(exchange='workers', queue=self.queue_name, routing_key=self.binding_key)
 
         channel.basic_consume(queue=self.queue_name, on_message_callback=self.callback, auto_ack=True)
 
@@ -60,11 +60,8 @@ publisher_name = PublisherClient({'host': 'localhost', 'port': 5672})
 
 i=1
 while i<len(sys.argv):
-    publisher_name.publish('worker'+str(i), sys.argv[i])
+    publisher_name.publish('worker'+'1', sys.argv[i])
     i+=1
 
-i=1    
-while i<len(sys.argv):
-    consumer_file = ConsumerClient({'host':'localhost', 'port':5672}, sys.argv[i], sys.argv[i])
-    consumer_file.consume()     # Se queda atascado en este punto del programa.
-    i+=1
+consumer_file = ConsumerClient({'host':'localhost', 'port':5672}, 'proves', 'proves')
+consumer_file.consume()

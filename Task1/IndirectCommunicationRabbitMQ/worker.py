@@ -16,9 +16,9 @@ class PublisherWorker:
     def publish(self, routing_key, message):
         channel = self.connection.channel()
 
-        channel.exchange_declare(exchange='proves', exchange_type='topic')
+        channel.exchange_declare(exchange='workers', exchange_type='topic')
 
-        channel.basic_publish(exchange='proves', routing_key=routing_key, body=message)
+        channel.basic_publish(exchange='workers', routing_key=routing_key, body=message)
         print(" [x] Sent message from %r" % (routing_key))
 
 class ConsumerWorker:
@@ -35,19 +35,19 @@ class ConsumerWorker:
         return pika.BlockingConnection(pika.ConnectionParameters(host=self.config['host'], port=self.config['port']))
 
     def callback(self, channel, method, properties, body):
-        print(" [x] Received new message %r from %r" % (body, method.routing_key))
+        print(" [x] Received new message %r for %r" % (body, method.routing_key))
 
-        publisher_file = PublisherWorker({'host': 'localhost', 'port': 5672})
-        worker = daskFunctions.DaskFunctions()
+        publisher_file = PublisherWorker({'host': 'localhost', 'port': 5672})       # Aquí puede haber problemas.
+        worker = daskFunctions.DaskFunctions()                                      # Aquí puede haber problemas.
 
-        publisher_file.publish(body.decode(), worker.readCSV(body.decode()))
+        publisher_file.publish('proves', worker.readCSV(body.decode()))
 
     def consume(self):
         channel = self.connection.channel()
 
-        channel.exchange_declare(exchange='proves', exchange_type='topic')
+        channel.exchange_declare(exchange='workers', exchange_type='topic')
         channel.queue_declare(queue=self.queue_name, exclusive=True)
-        channel.queue_bind(exchange='proves', queue=self.queue_name, routing_key=self.binding_key)
+        channel.queue_bind(exchange='workers', queue=self.queue_name, routing_key=self.binding_key)
 
         channel.basic_consume(queue=self.queue_name, on_message_callback=self.callback, auto_ack=True)
 
