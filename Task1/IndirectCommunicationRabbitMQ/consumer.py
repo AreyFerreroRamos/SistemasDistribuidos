@@ -12,7 +12,7 @@ class Consumer(abc.ABC):
         self.connection.close()
 
     def create_connection(self):
-        return pika.BlockingConnection(pika.ConnectionParameters(host=self.config['host'], port=self.config['port'], blocked_connection_timeout=self.config['timeout']))
+        return pika.BlockingConnection(pika.ConnectionParameters(host=self.config['host'], port=self.config['port']))
 
     @abc.abstractmethod
     def callback(self, channel, method, properties, body):
