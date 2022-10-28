@@ -16,4 +16,4 @@ class Publisher:
 
         channel.exchange_declare(exchange=exchange, exchange_type='topic')
 
-        channel.basic_publish(exchange=exchange, routing_key='routing_key', body=message)
+        channel.basic_publish(exchange=exchange, routing_key=routing_key, body=message)
