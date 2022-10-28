@@ -4,7 +4,7 @@ import sys
      
 class ConsumerClient(consumer.Consumer):
     def callback(self, channel, method, properties, body):
-        print(" [x] Received new message from %r" % (method.routing_key)+'\n')
+        print(" [x] Received new message.\n")
         print(body.decode().split(':')[0]+'\n')
         print(body.decode().split(':')[1]+'\n')
         print(body.decode().split(':')[2]+'\n')
@@ -20,10 +20,10 @@ publisher_name = publisher.Publisher({'host': 'localhost', 'port': 5672})
 
 i=1
 while i<len(sys.argv):
-    publisher_name.publish('worker'+'1', sys.argv[i]+':'+str(5)+':'+'City'+':'+'Tarragona'+':'+str(5)+':'+str(3))
+    publisher_name.publish('workers', 'worker', sys.argv[i]+':'+str(5)+':'+'City'+':'+'Tarragona'+':'+str(5)+':'+str(3))
     i+=1
 
-consumer_file = ConsumerClient({'host':'localhost', 'port':5672}, 'proves', 'proves')
+consumer_file = ConsumerClient({'host':'localhost', 'port':5672, 'timeout':3}, 'client', 'proves')
 consumer_file.consume()
 
 print("Temperatura maxima: "+str(max(maxs)))

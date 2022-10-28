@@ -2,9 +2,9 @@ import pika
 import abc
 
 class Consumer(abc.ABC):
-    def __init__(self, config, queue_name, binding_key):
+    def __init__(self, config, exchange_name, binding_key):
         self.config = config
-        self.queue_name = queue_name
+        self.exchange_name = exchange_name
         self.binding_key = binding_key
         self.connection = self.create_connection()
 
@@ -12,7 +12,7 @@ class Consumer(abc.ABC):
         self.connection.close()
 
     def create_connection(self):
-        return pika.BlockingConnection(pika.ConnectionParameters(host=self.config['host'], port=self.config['port']))
+        return pika.BlockingConnection(pika.ConnectionParameters(host=self.config['host'], port=self.config['port'], blocked_connection_timeout=self.config['timeout']))
 
     @abc.abstractmethod
     def callback(self, channel, method, properties, body):
@@ -21,15 +21,16 @@ class Consumer(abc.ABC):
     def consume(self):
         channel = self.connection.channel()
 
-        channel.exchange_declare(exchange='workers', exchange_type='topic')
-        channel.queue_declare(queue=self.queue_name, exclusive=True)
-        channel.queue_bind(exchange='workers', queue=self.queue_name, routing_key=self.binding_key)
+        channel.exchange_declare(exchange=self.exchange_name, exchange_type='topic')
+        result = channel.queue_declare(queue='', exclusive=True)
+        queue_name = result.method.queue
+        channel.queue_bind(exchange=self.exchange_name, queue=queue_name, routing_key=self.binding_key)
 
-        channel.basic_consume(queue=self.queue_name, on_message_callback=self.callback, auto_ack=True)
+        channel.basic_consume(queue=queue_name, on_message_callback=self.callback, auto_ack=True)
 
         try:
-            print(' [*] Waiting for data for '+self.queue_name+'. Use control + c to exit.')
+            print(' [*] Waiting for data. Use control + c to exit.')
             channel.start_consuming()
         except KeyboardInterrupt:
-            print(' [*] Exiting...')
+            print(' [*] Exiting...\n')
             channel.stop_consuming()
