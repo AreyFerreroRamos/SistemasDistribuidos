@@ -14,6 +14,6 @@ class Publisher:
     def publish(self, exchange, routing_key, message):
         channel = self.connection.channel()
 
-        channel.exchange_declare(exchange=exchange, exchange_type='topic')
+        channel.exchange_declare(exchange=exchange, exchange_type='direct')
 
         channel.basic_publish(exchange=exchange, routing_key=routing_key, body=message)
