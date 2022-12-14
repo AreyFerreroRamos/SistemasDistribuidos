@@ -7,7 +7,15 @@ import sys
 import os
 import serverFunctions
 
-def treat_ping():
+def treat_ping_master():
+    while True:
+        # Pings.
+        if event.is_set():
+            break
+        else:
+            time.sleep(1)
+
+def treat_ping_worker():
     while True:
         # Pings.
         if event.is_set():
@@ -20,6 +28,8 @@ logging.basicConfig(level=logging.INFO)
 if (len(sys.argv) == 1):
     node="master"
     server = SimpleXMLRPCServer(('localhost', 9000), logRequests=True)
+
+    name_thread = threading.Thread(target=treat_ping_master)
 else:
     node="worker"
     proxy = xmlrpc.client.ServerProxy('http://localhost:9000')
@@ -27,11 +37,12 @@ else:
 
     server = SimpleXMLRPCServer(('localhost', int(sys.argv[1])), logRequests=True)
 
+    name_thread = threading.Thread(target=treat_ping_worker)
+
 server.register_instance(serverFunctions.ServerFunctions())
 
 try:
     print('Use control + c to exit the '+node+' node.')
-    name_thread = threading.Thread(target=treat_ping)
     event = threading.Event()
     name_thread.start()
     server.serve_forever()
