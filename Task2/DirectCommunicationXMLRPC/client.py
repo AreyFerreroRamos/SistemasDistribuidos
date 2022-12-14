@@ -21,9 +21,11 @@ i=1
 while i<len(sys.argv):
     num_worker=0
     while num_worker<client_master.numWorkers() and i<len(sys.argv):
-        client_worker = xmlrpc.client.ServerProxy(client_master.listWorkers()[num_worker])
+        worker = client_master.getWorker()
+        client_worker = xmlrpc.client.ServerProxy(worker)
         threads.append(threading.Thread(target=treat_file, name="thread%s" %i, args=(client_worker, i, maxs, mins)))
         threads[num_worker].start()
+        client_master.addWorker(worker)
         num_worker+=1
         i+=1
     num_worker=0

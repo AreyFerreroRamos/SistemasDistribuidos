@@ -1,18 +1,18 @@
+import redis
+
 class WorkerFunctions:
-    workers=[]
+    redis_cli = redis.Redis(host="localhost", port=16379, decode_responses=True, encoding="utf-8")
 
     def addWorker(self, worker):
-        self.workers.append(worker)
+        self.redis_cli.rpush('workers', worker)
         return ' '
 
-    def listWorkers(self):
-        return list(self.workers)
+    def getWorker(self):
+        return self.redis_cli.lpop('workers')
 
     def numWorkers(self):
-        return len(self.workers)
+        return self.redis_cli.llen('workers')
 
     def removeWorker(self, port):
-        for worker in self.workers:
-            if port==worker.split(':')[2]:
-                self.workers.remove(worker)
+        self.redis_cli.lrem('workers', 0, 'http://localhost:'+port)
         return ' '
