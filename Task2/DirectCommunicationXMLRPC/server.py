@@ -2,22 +2,21 @@ from xmlrpc.server import SimpleXMLRPCServer
 import xmlrpc.client
 import logging
 import sys
-import workerFunctions
-import daskFunctions
+import serverFunctions
 
 logging.basicConfig(level=logging.INFO)
 
 if (len(sys.argv) == 1):
     node="master"
     server = SimpleXMLRPCServer(('localhost', 9000), logRequests=True)
-    server.register_instance(workerFunctions.WorkerFunctions())
 else:
     node="worker"
     proxy = xmlrpc.client.ServerProxy('http://localhost:9000')
     proxy.addWorker('http://localhost:'+sys.argv[1])
 
     server = SimpleXMLRPCServer(('localhost', int(sys.argv[1])), logRequests=True)
-    server.register_instance(daskFunctions.DaskFunctions())
+
+server.register_instance(serverFunctions.ServerFunctions())
 
 try:
     print('Use control + c to exit the '+node+' node.')
