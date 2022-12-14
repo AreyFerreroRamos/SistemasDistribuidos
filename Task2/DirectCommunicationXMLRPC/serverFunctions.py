@@ -4,6 +4,13 @@ import pandas
 class ServerFunctions:
     redis_cli = redis.Redis(host="localhost", port=16379, decode_responses=True, encoding="utf-8")
 
+    def addMaster(self, master):
+        self.redis_cli.rpush('master', master)
+        return ' '
+
+    def getMaster(self):
+        return self.redis_cli.lpop('master')
+    
     def addWorker(self, worker):
         self.redis_cli.rpush('workers', worker)
         return ' '

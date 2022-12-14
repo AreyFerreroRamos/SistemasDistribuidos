@@ -7,7 +7,7 @@ import sys
 import os
 import serverFunctions
 
-def treat_ping_master():
+def treat_ping_master(server):
     while True:
         # Pings.
         if event.is_set():
@@ -15,12 +15,17 @@ def treat_ping_master():
         else:
             time.sleep(1)
 
-def treat_ping_worker():
+def treat_ping_worker(server):
     while True:
-        # Pings.
         if event.is_set():
             break
         else:
+            master = server.getMaster()
+            response = os.system("ping -c 1 "+master)
+            if (response != 0):
+                server.addMaster(server.getWorker())
+            else:
+                server.addMaster(master)
             time.sleep(1)
 
 logging.basicConfig(level=logging.INFO)
@@ -37,7 +42,7 @@ else:
 
     server = SimpleXMLRPCServer(('localhost', int(sys.argv[1])), logRequests=True)
 
-    name_thread = threading.Thread(target=treat_ping_worker)
+    name_thread = threading.Thread(target=treat_ping_worker, args=(server))
 
 server.register_instance(serverFunctions.ServerFunctions())
 
