@@ -1,6 +1,6 @@
 from xmlrpc.server import SimpleXMLRPCServer
 import xmlrpc.client
-import threading
+#import threading
 import logging
 import time
 import sys
@@ -8,15 +8,25 @@ import os
 import masterManagerFunctions
 import workerFunctions
 
-#def treat_ping_master(server):
- #   while True:
-  #      if event.is_set():
-   #         break
-    #    else:
-     #       print("Ping")
-      #  time.sleep(1)
+#def treat_ping_master():
+ #   masterManager = masterManagerFunctions.MasterManagerFunctions()
+  #  client_master = xmlrpc.client.ServerProxy(masterManager.getMaster())
+   # 
+    #while True:
+     #   time.sleep(5)
+      #  if event.is_set():
+       #     break
+        #else:
+         #   print("Primer control de errores")
+          #  for worker in client_master.getWorkers():
+           #     print("Segundo control de errores "+worker.split(':')[2]+" "+worker.split(':')[1].split('/')[2])             
+            #    response = os.system("ping -c 1 "+worker.split(':')[2]+" "+worker.split(':')[1].split('/')[2])
+             #   print("Tercer control de errores")                
+              #  if (response != 0):
+               #     print("Quarto control de errores")                
+                #    client_master.removeWorker(worker.split(':')[2])
 
-#def treat_ping_worker(masterManager, server):
+#def treat_ping_worker():
  #   while True:
   #      if event.is_set():
    #         break
@@ -36,8 +46,8 @@ if (len(sys.argv) == 1):
     masterManager.setMaster('http://localhost:9000')
     
     server = SimpleXMLRPCServer(('localhost', 9000), logRequests=True)
-
-    #name_thread = threading.Thread(target=treat_ping_master, args=())
+    
+    #name_thread = threading.Thread(target=treat_ping_master)
 else:
     node="worker"
     
@@ -46,9 +56,9 @@ else:
 
     server = SimpleXMLRPCServer(('localhost', int(sys.argv[1])), logRequests=True)
 
-    #name_thread = threading.Thread(target=treat_ping_worker, args=(masterManager, server))
+    #name_thread = threading.Thread(target=treat_ping_worker)
 
-server.register_instance(workerFunctions.WorkerFunctions())
+server.register_instance(workerFunctions.WorkerFunctions())    
 
 try:
     print('Use control + c to exit the '+node+' node.')
