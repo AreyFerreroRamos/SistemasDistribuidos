@@ -5,7 +5,7 @@ import logging
 import time
 import sys
 import os
-import masterManagerFunctions
+import managerFunctions
 import workerFunctions
 
 #def treat_ping_master():
@@ -37,13 +37,13 @@ import workerFunctions
         #        masterManager.setMaster('http://localhost:'+sys.argv[1])
         #time.sleep(1)
 
-masterManager = masterManagerFunctions.MasterManagerFunctions()
+manager = managerFunctions.ManagerFunctions()
 logging.basicConfig(level=logging.INFO)
 
 if (len(sys.argv) == 1):
     node="master"
     
-    masterManager.setMaster('http://localhost:9000')
+    manager.setMaster('http://localhost:9000')
     
     server = SimpleXMLRPCServer(('localhost', 9000), logRequests=True)
     
@@ -51,7 +51,7 @@ if (len(sys.argv) == 1):
 else:
     node="worker"
     
-    proxy = xmlrpc.client.ServerProxy(masterManager.getMaster())
+    proxy = xmlrpc.client.ServerProxy(manager.getMaster())
     proxy.addWorker('http://localhost:'+sys.argv[1])
 
     server = SimpleXMLRPCServer(('localhost', int(sys.argv[1])), logRequests=True)
