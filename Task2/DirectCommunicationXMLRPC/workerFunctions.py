@@ -24,7 +24,7 @@ class WorkerFunctions:
 
     def isAlive(self):
         return True
-    
+
     def readCSV(self, name_file):
         self.df = pandas.read_csv(name_file)
         return str(self.df)

@@ -8,58 +8,48 @@ import os
 import masterManagerFunctions
 import workerFunctions
 
-def treat_ping_master():
-    client_master = xmlrpc.client.ServerProxy(masterManagerFunctions.MasterManagerFunctions().getMaster())
+def ping_nodes(node, master_manager):
+    if (node == "master"):
+        client_master = xmlrpc.client.ServerProxy(master_manager.getMaster())
     
     while True:
         if event.is_set():
             break
         else:
-            for worker in client_master.listWorkers():
+            if (node == "master"):
+                for worker in client_master.listWorkers():
+                    try:
+                        xmlrpc.client.ServerProxy(worker).isAlive()
+                    except:
+                        client_master.removeWorker(worker.split(':')[2])
+            else:
                 try:
-                    client_worker = xmlrpc.client.ServerProxy(worker)
-                    client_worker.isAlive()
+                    xmlrpc.client.ServerProxy(master_manager.getMaster()).isAlive()
                 except:
-                    client_master.removeWorker(worker.split(':')[2])
+                    node="master"
+                    master_manager.setMaster('http://localhost:'+sys.argv[1])
+                    client_master = xmlrpc.client.ServerProxy('http://localhost:'+sys.argv[1])
+                    client_master.removeWorker(sys.argv[1])
         time.sleep(1)
 
-def treat_ping_worker():
-    #masterManager = masterManagerFunctions.MasterManagerFunctions()
-    #client_worker = xmlrpc.client.ServerProxy('http://localhost:'+sys.argv[1])
-
-    while True:
-        if event.is_set():
-            break
-        else:
-     #       try:
-      #          xmlrpc.client.ServerProxy(masterManager.getMaster()).isAlive()
-       #     except:
-        #        #client_worker.removeWorker(sys.argv[1])
-         #       masterManager.setMaster('http://localhost:'+sys.argv[1])
-            time.sleep(1)
-
-masterManager = masterManagerFunctions.MasterManagerFunctions()
+master_manager = masterManagerFunctions.MasterManagerFunctions()
 logging.basicConfig(level=logging.INFO)
 
 if (len(sys.argv) == 1):
     node="master"
     
-    masterManager.setMaster('http://localhost:9000')
-    
+    master_manager.setMaster('http://localhost:9000')
     server = SimpleXMLRPCServer(('localhost', 9000), logRequests=True)
-    
-    name_thread = threading.Thread(target=treat_ping_master)
 else:
     node="worker"
     
-    proxy = xmlrpc.client.ServerProxy(masterManager.getMaster())
+    proxy = xmlrpc.client.ServerProxy(master_manager.getMaster())
     proxy.addWorker('http://localhost:'+sys.argv[1])
 
     server = SimpleXMLRPCServer(('localhost', int(sys.argv[1])), logRequests=True)
 
-    name_thread = threading.Thread(target=treat_ping_worker)
-
 server.register_instance(workerFunctions.WorkerFunctions())
+name_thread = threading.Thread(target=ping_nodes, args=(node, master_manager))
 
 try:
     print('Use control + c to exit the '+node+' node.')
