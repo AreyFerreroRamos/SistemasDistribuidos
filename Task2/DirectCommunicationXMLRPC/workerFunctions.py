@@ -21,6 +21,9 @@ class WorkerFunctions:
     def removeWorker(self, port):
         self.redis_cli.lrem('workers', 0, 'http://localhost:'+port)
         return ' '
+
+    def isAlive(self):
+        return True
     
     def readCSV(self, name_file):
         self.df = pandas.read_csv(name_file)
