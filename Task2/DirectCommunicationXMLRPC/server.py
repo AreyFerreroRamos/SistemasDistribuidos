@@ -18,7 +18,7 @@ import workerFunctions
        #     break
         #else:
          #   print("Primer control de errores")
-          #  for worker in client_master.getWorkers():
+          #  for worker in client_master.listWorkers():
            #     print("Segundo control de errores "+worker.split(':')[2]+" "+worker.split(':')[1].split('/')[2])             
             #    response = os.system("ping -c 1 "+worker.split(':')[2]+" "+worker.split(':')[1].split('/')[2])
              #   print("Tercer control de errores")                
@@ -46,6 +46,7 @@ if (len(sys.argv) == 1):
     manager.setMaster('http://localhost:9000')
     
     server = SimpleXMLRPCServer(('localhost', 9000), logRequests=True)
+    server.register_instance(managerFunctions.ManagerFunctions())
     
     #name_thread = threading.Thread(target=treat_ping_master)
 else:
@@ -55,10 +56,9 @@ else:
     proxy.addWorker('http://localhost:'+sys.argv[1])
 
     server = SimpleXMLRPCServer(('localhost', int(sys.argv[1])), logRequests=True)
+    server.register_instance(workerFunctions.WorkerFunctions())    
 
     #name_thread = threading.Thread(target=treat_ping_worker)
-
-server.register_instance(workerFunctions.WorkerFunctions())    
 
 try:
     print('Use control + c to exit the '+node+' node.')

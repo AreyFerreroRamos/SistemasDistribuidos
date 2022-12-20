@@ -17,3 +17,20 @@ class ManagerFunctions:
 
     def getMaster(self):
         return self.redis_cli.get('master')
+
+    def addWorker(self, worker):
+        self.redis_cli.rpush('workers', worker)
+        return ' '
+
+    def getWorker(self):
+        return self.redis_cli.lpop('workers')
+
+    def listWorkers(self):
+        return self.redis_cli.lrange('workers', 0, -1)
+
+    def numWorkers(self):
+        return self.redis_cli.llen('workers')
+
+    def removeWorker(self, port):
+        self.redis_cli.lrem('workers', 0, 'http://localhost:'+port)
+        return ' '
