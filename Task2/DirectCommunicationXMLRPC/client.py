@@ -1,7 +1,7 @@
 import xmlrpc.client
 import threading
 import sys
-import managerFunctions
+import masterManagerFunctions
 
 def treat_file(client_worker, i, maxs, mins):
     print(client_worker.readCSV(sys.argv[i])+"\n")
@@ -12,7 +12,7 @@ def treat_file(client_worker, i, maxs, mins):
     maxs.append(float(client_worker.max('Temp_max')))
     mins.append(float(client_worker.min('Temp_min')))
  
-client_master = xmlrpc.client.ServerProxy(managerFunctions.ManagerFunctions().getMaster())
+client_master = xmlrpc.client.ServerProxy(masterManagerFunctions.MasterManagerFunctions().getMaster())
 
 threads=[]
 maxs=[]

@@ -5,7 +5,7 @@ import logging
 import time
 import sys
 import os
-import managerFunctions
+import masterManagerFunctions
 import workerFunctions
 
 #def treat_ping_master():
@@ -17,14 +17,10 @@ import workerFunctions
       #  if event.is_set():
        #     break
         #else:
-         #   print("Primer control de errores")
-          #  for worker in client_master.listWorkers():
-           #     print("Segundo control de errores "+worker.split(':')[2]+" "+worker.split(':')[1].split('/')[2])             
-            #    response = os.system("ping -c 1 "+worker.split(':')[2]+" "+worker.split(':')[1].split('/')[2])
-             #   print("Tercer control de errores")                
-              #  if (response != 0):
-               #     print("Quarto control de errores")                
-                #    client_master.removeWorker(worker.split(':')[2])
+         #   for worker in client_master.listWorkers():
+          #      response = os.system("ping -c 1 "+worker.split(':')[2]+" "+worker.split(':')[1].split('/')[2])
+           #     if (response != 0):
+            #        client_master.removeWorker(worker.split(':')[2])
 
 #def treat_ping_worker():
  #   while True:
@@ -35,30 +31,30 @@ import workerFunctions
       #      if (response != 0):
        #         server.removeWorker(sys.argv[1])
         #        masterManager.setMaster('http://localhost:'+sys.argv[1])
-        #time.sleep(1)
+         #   time.sleep(1)
 
-manager = managerFunctions.ManagerFunctions()
+masterManager = masterManagerFunctions.MasterManagerFunctions()
 logging.basicConfig(level=logging.INFO)
 
 if (len(sys.argv) == 1):
     node="master"
     
-    manager.setMaster('http://localhost:9000')
+    masterManager.setMaster('http://localhost:9000')
     
     server = SimpleXMLRPCServer(('localhost', 9000), logRequests=True)
-    server.register_instance(managerFunctions.ManagerFunctions())
     
     #name_thread = threading.Thread(target=treat_ping_master)
 else:
     node="worker"
     
-    proxy = xmlrpc.client.ServerProxy(manager.getMaster())
+    proxy = xmlrpc.client.ServerProxy(masterManager.getMaster())
     proxy.addWorker('http://localhost:'+sys.argv[1])
 
     server = SimpleXMLRPCServer(('localhost', int(sys.argv[1])), logRequests=True)
-    server.register_instance(workerFunctions.WorkerFunctions())    
 
     #name_thread = threading.Thread(target=treat_ping_worker)
+
+server.register_instance(workerFunctions.WorkerFunctions())
 
 try:
     print('Use control + c to exit the '+node+' node.')
