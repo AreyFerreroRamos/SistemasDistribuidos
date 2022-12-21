@@ -12,6 +12,7 @@ def treat_file(client_worker, i, maxs, mins):
     maxs.append(float(client_worker.max('Temp_max')))
     mins.append(float(client_worker.min('Temp_min')))
  
+print(masterManagerFunctions.MasterManagerFunctions().getMaster())
 client_master = xmlrpc.client.ServerProxy(masterManagerFunctions.MasterManagerFunctions().getMaster())
 
 threads=[]

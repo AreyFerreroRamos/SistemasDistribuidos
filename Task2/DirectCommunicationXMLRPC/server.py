@@ -9,6 +9,7 @@ import masterManagerFunctions
 import workerFunctions
 
 def ping_nodes(node, master_manager):
+    mutex = threading.Lock()
     if (node == "master"):
         client_master = xmlrpc.client.ServerProxy(master_manager.getMaster())
     
@@ -23,6 +24,7 @@ def ping_nodes(node, master_manager):
                     except:
                         client_master.removeWorker(worker.split(':')[2])
             else:
+                mutex.acquire()
                 try:
                     xmlrpc.client.ServerProxy(master_manager.getMaster()).isAlive()
                 except:
@@ -30,6 +32,7 @@ def ping_nodes(node, master_manager):
                     master_manager.setMaster('http://localhost:'+sys.argv[1])
                     client_master = xmlrpc.client.ServerProxy('http://localhost:'+sys.argv[1])
                     client_master.removeWorker(sys.argv[1])
+                mutex.release()
         time.sleep(1)
 
 master_manager = masterManagerFunctions.MasterManagerFunctions()
