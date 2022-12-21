@@ -60,6 +60,6 @@ try:
     name_thread.start()
     server.serve_forever()
 except KeyboardInterrupt:
-    print('Exiting '+node+' node...')
+    print('Exiting node...')
     event.set()
     name_thread.join()
