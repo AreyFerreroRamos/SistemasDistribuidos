@@ -24,6 +24,12 @@ class WorkerFunctions:
 
     def isAlive(self):
         return True
+
+    def canBeLeader(self, self_port, candidate_port):
+        if int(self_port) <= int(candidate_port):
+            return True
+        else:
+            return False
     
     def readCSV(self, name_file):
         self.df = pandas.read_csv(name_file)

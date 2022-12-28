@@ -8,15 +8,6 @@ import os
 import managerFunctions
 import workerFunctions
 
-def leaderElection(client_master):
-    isLeader = True
-
-    for worker in client_master.listWorkers():
-        if (int(worker.split(':')[2]) > int(sys.argv[1])):
-            isLeader = False
-            break
-    return isLeader
-
 def ping_nodes(manager):
     if (manager.getNodeType() == "master"):
         client_master = xmlrpc.client.ServerProxy(manager.getMaster())
@@ -35,11 +26,16 @@ def ping_nodes(manager):
                 try:
                     xmlrpc.client.ServerProxy(manager.getMaster()).isAlive()
                 except:
-                    client_master = xmlrpc.client.ServerProxy('http://localhost:'+sys.argv[1])
-                    isLeader = leaderElection(client_master)
-                    if (isLeader):
+                    client_worker = xmlrpc.client.ServerProxy('http://localhost:'+sys.argv[1])
+                    for worker in client_worker.listWorkers():
+                        client_candidate = xmlrpc.client.ServerProxy(worker)
+                        isLeader = client_candidate.canBeLeader(worker.split(':')[2], sys.argv[1])
+                        if (isLeader == False):
+                            break
+                    if (isLeader == True):
                         manager.setNodeType("master")
                         manager.setMaster('http://localhost:'+sys.argv[1])
+                        client_master = xmlrpc.client.ServerProxy(manager.getMaster())
                         client_master.removeWorker(sys.argv[1])
         time.sleep(1)
 
