@@ -6,7 +6,7 @@ import time
 import sys
 import os
 import managerFunctions
-import workerFunctions
+import serverFunctions
 
 def ping_nodes(manager):
     if (manager.getNodeType() == "master"):
@@ -55,7 +55,7 @@ else:
 
     server = SimpleXMLRPCServer(('localhost', int(sys.argv[1])), logRequests=True)
 
-server.register_instance(workerFunctions.WorkerFunctions())
+server.register_instance(serverFunctions.ServerFunctions())
 name_thread = threading.Thread(target=ping_nodes, args=(manager,))
 
 try:

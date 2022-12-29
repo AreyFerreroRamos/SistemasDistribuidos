@@ -1,7 +1,7 @@
 import redis
 import pandas
 
-class WorkerFunctions:
+class ServerFunctions:
     def __init__(self):
         self.redis_cli = redis.Redis(host="localhost", port=16379, decode_responses=True, encoding="utf-8")
     
