@@ -2,9 +2,16 @@ import redis
 import pandas
 
 class ServerFunctions:
-    def __init__(self):
+    def __init__(self, master):
+        self.master = master
         self.redis_cli = redis.Redis(host="localhost", port=16379, decode_responses=True, encoding="utf-8")
-    
+
+    def getMaster(self):
+        return self.master
+
+    def setMaster(self, master):
+        self.master = master
+
     def addWorker(self, worker):
         self.redis_cli.rpush('workers', worker)
         return ' '
