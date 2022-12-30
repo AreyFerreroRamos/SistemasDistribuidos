@@ -1,7 +1,7 @@
 import xmlrpc.client
 import time
 
-def ping_nodes(node, port, event):
+def pingNodes(node, port, event):
     if (node.getNodeType() == "master"):
         proxy_master = xmlrpc.client.ServerProxy('http://localhost:'+port, allow_none=True)
     else:
