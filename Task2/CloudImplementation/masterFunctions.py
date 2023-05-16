@@ -1,4 +1,4 @@
-class WorkerFunctions:
+class MasterFunctions:
     workers=[]
 
     def addWorker(self, worker):

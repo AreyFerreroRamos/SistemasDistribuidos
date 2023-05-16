@@ -1,11 +1,11 @@
 from xmlrpc.server import SimpleXMLRPCServer
 import logging
-import workerFunctions
+import masterFunctions
 
 master = SimpleXMLRPCServer(('localhost', 9000), logRequests=True)
 logging.basicConfig(level=logging.INFO)
 
-master.register_instance(workerFunctions.WorkerFunctions())
+master.register_instance(masterFunctions.MasterFunctions())
 
 try:
     print('Use control + c to exit the Master node')
